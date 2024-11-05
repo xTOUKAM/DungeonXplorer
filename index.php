@@ -1,45 +1,54 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
-require 'autoload.php';
+    require 'autoload.php';
 
-class Router {
-    private $routes = [];
-    private $prefix;
+    class Router
+    {
+        private $routes = [];
+        private $prefix;
 
-    public function __construct($prefix = '') {
-        $this->prefix = trim($prefix, '/');
-    }
-
-    public function addRoute($uri, $controllerMethod) {
-        $this->routes[trim($uri, '/')] = $controllerMethod;
-    }
-
-    public function route($url) {
-        if($this->prefix && strpos($url, $this->prefix) === 0) {
-            $url = substr($url, strlen($this->prefix));
+        public function __construct($prefix = '')
+        {
+            $this->prefix = trim($prefix, '/');
         }
 
-        $url = trim($url, '/');
+        public function addRoute($uri, $controllerMethod)
+        {
+            $this->routes[trim($uri, '/')] = $controllerMethod;
+        }
 
-        if(array_key_exists($url, $this->routes)) {
-            list($controllerName, $methodName) = explode('@', $this->routes[$url]);
+        public function route($url) {
+            // Suppression du préfixe du début de l'URL
+            if ($this->prefix && strpos($url, $this->prefix) === 0) {
+                $url = substr($url, strlen($this->prefix) + 1);
+            }
 
-            $controller = new $controllerName();
-            $controller->$methodName();
-        } else {
-            echo '<h2>L\'URL demandée n\'existe pas</h2>';
+            $url = trim($url, '/');
+
+            if (array_key_exists($url, $this->routes)) {
+                // Extraction du nom du contrôleur et de la méthode
+                list($controllerName, $methodName) = explode('@', $this->routes[$url]);
+
+                // Instanciation du contrôleur et appel de la méthode
+                $controller = new $controllerName();
+                $controller->$methodName();
+            } else {
+                // Gestion des erreurs (page 404, etc.)
+                echo '<h2>L\'URL demandée n\'existe pas !</h2>';
+            }
         }
     }
-}
 
-$router = new Router('DungeonXplorer');
+    // Instanciation du routeur
+    $router = new Router('DungeonXplorer');
 
-// Ajout des routes
-$router->addRoute('accueil', 'HomeController@index');
+    // Ajout des routes
+    $router->addRoute('', 'HomeController@index');
 
-// Appel de la méthode route
-$router->route(trim($_SERVER['REQUEST_URI'], '/'));
+    // Appel de la méthode route
+    $router->route(trim($_SERVER['REQUEST_URI'], '/'));
+?>
