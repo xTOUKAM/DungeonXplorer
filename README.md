@@ -60,7 +60,7 @@ Réservée aux Magiciens et aux monstres magiques, et dépend de leur réserve d
 * [Nassim Ramdane](https://github.com/NassimSkoto)
 * [Tom Cholot](https://github.com/15cf0408)
 * [Elsa Hamon](https://github.com/AstatePNG)
-* [X](X)
+* [Paul Letellier](https://github.com/Paul8710)
 
 ## License
 
