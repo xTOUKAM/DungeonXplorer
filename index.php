@@ -4,6 +4,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+include_once 'views/home.php';
+
 require 'autoload.php';
 
 class Router
@@ -25,9 +27,9 @@ class Router
     {
         // Récupérer les paramètres GET
         if (isset($_GET['controller']) && isset($_GET['action'])) {
-            $controllerName = $_GET['controller'];
-            $action = $_GET['action'];
             $chapterId = $_GET['chapterId'] ?? null;  // Peut être null si non défini
+            $controllerName = $_GET['controller'] ?? 'HomeController';
+            $action = $_GET['action'] ?? 'index';
             
             // Inclure et créer le contrôleur
             require_once "controllers/{$controllerName}.php";
@@ -50,7 +52,7 @@ class Router
 $router = new Router('DungeonXplorer');
 
 // Ajout des routes
-$router->addRoute('', 'HomeController@index');
+$router->addRoute('views/home', 'HomeController@index');
 $router->addRoute('chapter/show', 'ChapterController@show');
 $router->addRoute('chapter/choose', 'ChapterController@choose');
 
