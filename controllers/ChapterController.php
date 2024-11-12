@@ -28,24 +28,32 @@ class ChapterController {
 
     // Gérer le choix du joueur
     public function choose($params) {
-        // Valider les IDs pour éviter des erreurs
-        $currentChapterId = isset($params['currentChapterId']) ? (int)$params['currentChapterId'] : 1;
-        $choiceId = isset($params['choice']) ? (int)$params['choice'] : null;
-
+        // Assurez-vous de récupérer correctement les paramètres de l'URL
+        $currentChapterId = isset($_GET['currentChapterId']) ? (int)$_GET['currentChapterId'] : 1;
+        $choiceId = isset($_GET['choice']) ? (int)$_GET['choice'] : null;
+    
+        // Vérifiez si le choix est null
+        if ($choiceId === null) {
+            echo "Aucun choix sélectionné.";
+            return;
+        }
+    
+        // Log des paramètres pour vérifier
+        error_log("Chapitre actuel: $currentChapterId, Choix sélectionné: $choiceId");
+    
         // Récupérer l'ID du prochain chapitre en fonction du choix
         $nextChapterId = $this->chapterModel->getNextChapterId($currentChapterId, $choiceId);
-
+    
+        // Log du résultat
+        error_log("ID du prochain chapitre: " . ($nextChapterId ? $nextChapterId : "Aucun"));
+    
         if ($nextChapterId) {
-            // Empêcher la mise en cache de la page
-            header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-            header("Pragma: no-cache");
-
             // Rediriger vers le prochain chapitre
             header('Location: /DungeonXplorer/index.php?controller=ChapterController&action=show&chapterId=' . $nextChapterId);
-            exit();  // Toujours appeler exit après une redirection pour éviter l'exécution de code après la redirection
+            exit();
         } else {
             echo "Choix invalide ou chapitre suivant introuvable.";
         }
-    }
+    }            
 }
 ?>
