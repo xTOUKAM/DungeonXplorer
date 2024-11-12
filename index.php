@@ -49,6 +49,9 @@
     // Ajout des routes
     $router->addRoute('', 'HomeController@index');
 
+    $router->addRoute('chapter/show', 'ChapterController@show');
+    $router->addRoute('chapter/choose', 'ChapterController@choose');
+
     // Appel de la méthode route
     $router->route(trim($_SERVER['REQUEST_URI'], '/'));
 ?>
