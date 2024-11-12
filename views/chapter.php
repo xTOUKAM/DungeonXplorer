@@ -14,7 +14,9 @@
         <?php endif; ?>
 
         <!-- Boutons de choix dynamiques -->
-        <form method="POST" action="/DungeonXplorer/ChapterController/choose">
+        <form method="GET" action="/DungeonXplorer/index.php">
+            <input type="hidden" name="controller" value="ChapterController">
+            <input type="hidden" name="action" value="choose">
             <input type="hidden" name="currentChapterId" value="<?php echo htmlspecialchars($chapter['id']); ?>">
             
             <!-- Boutons de choix pour les options -->

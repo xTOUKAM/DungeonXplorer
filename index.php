@@ -26,21 +26,28 @@
             if ($this->prefix && strpos($url, $this->prefix) === 0) {
                 $url = substr($url, strlen($this->prefix) + 1);
             }
-
+        
             $url = trim($url, '/');
-
+        
             if (array_key_exists($url, $this->routes)) {
                 // Extraction du nom du contrôleur et de la méthode
                 list($controllerName, $methodName) = explode('@', $this->routes[$url]);
-
+        
                 // Instanciation du contrôleur et appel de la méthode
                 $controller = new $controllerName();
-                $controller->$methodName();
+                
+                // Appel de la méthode avec les bons paramètres en fonction de la méthode HTTP
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $controller->$methodName();
+                } else {
+                    // Gérer les requêtes GET (comme la page d'accueil, par exemple)
+                    $controller->$methodName();
+                }
             } else {
                 // Gestion des erreurs (page 404, etc.)
                 echo '<h2>L\'URL demandée n\'existe pas !</h2>';
             }
-        }
+        }        
     }
 
     // Instanciation du routeur
@@ -55,11 +62,12 @@
     // Appel de la méthode route
     $router->route(trim($_SERVER['REQUEST_URI'], '/'));
 
-    // index.php
+    // Vérifie si les paramètres GET sont définis
     if (isset($_GET['controller']) && isset($_GET['action'])) {
         $controllerName = $_GET['controller'];
         $action = $_GET['action'];
-        $chapterId = $_GET['chapterId'] ?? 1;
+        $currentChapterId = $_GET['currentChapterId'] ?? 1;  // Valeur par défaut si non définie
+        $choice = $_GET['choice'] ?? null;  // Choix par défaut
 
         // Charge le contrôleur
         require_once "controllers/{$controllerName}.php";
@@ -67,7 +75,8 @@
 
         // Appelle l'action
         if (method_exists($controller, $action)) {
-            $controller->$action($chapterId);
+            // Passe les deux arguments : $currentChapterId et $choice
+            $controller->$action($currentChapterId, $choice);
         } else {
             echo "Action non trouvée.";
         }
