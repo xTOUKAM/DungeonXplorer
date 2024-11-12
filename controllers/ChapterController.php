@@ -8,7 +8,6 @@
 
         public function show($chapterId = 1) {
             $chapter = $this->chapterModel->getChapterById($chapterId);
-            $choices = $this->chapterModel->getChoicesForChapter($chapterId);
         
             if (!$chapter) {
                 echo "Chapitre non trouvé pour l'ID : " . htmlspecialchars($chapterId);
@@ -17,7 +16,7 @@
         
             // Utilisation d'extract dans le contrôleur
             extract(['chapter' => $chapter]);
-            include 'views/chapter.php';
+            include __DIR__ . '/../views/chapter.php';
         }            
 
         // On gère la transition des chapitres en fonction des choix

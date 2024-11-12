@@ -54,4 +54,24 @@
 
     // Appel de la méthode route
     $router->route(trim($_SERVER['REQUEST_URI'], '/'));
+
+    // index.php
+    if (isset($_GET['controller']) && isset($_GET['action'])) {
+        $controllerName = $_GET['controller'];
+        $action = $_GET['action'];
+        $chapterId = $_GET['chapterId'] ?? 1;
+
+        // Charge le contrôleur
+        require_once "controllers/{$controllerName}.php";
+        $controller = new $controllerName();
+
+        // Appelle l'action
+        if (method_exists($controller, $action)) {
+            $controller->$action($chapterId);
+        } else {
+            echo "Action non trouvée.";
+        }
+    } else {
+        echo "Contrôleur ou action non définis.";
+    }
 ?>
