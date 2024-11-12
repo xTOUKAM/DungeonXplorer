@@ -13,14 +13,23 @@
             <img src="images/<?php echo htmlspecialchars($chapter['image']); ?>" alt="Illustration du chapitre <?php echo htmlspecialchars($chapter['id']); ?>">
         <?php endif; ?>
 
-        <!-- Boutons de choix dynamiques -->
-        <form method="POST" action="/DungeonXplorer/ChapterController/choose">
-            <input type="hidden" name="currentChapterId" value="<?php echo htmlspecialchars($chapter['id']); ?>">
-            
-            <!-- Boutons de choix pour les options -->
-            <button type="submit" name="choice" value="1">Choix 1</button>
-            <button type="submit" name="choice" value="2">Choix 2</button>
-        </form>
+        <!-- Affichage des choix dynamiques pour ce chapitre -->
+        <?php if (!empty($choices)): ?>
+            <form method="GET" action="/DungeonXplorer/index.php">
+                <input type="hidden" name="controller" value="ChapterController">
+                <input type="hidden" name="action" value="choose">
+                <input type="hidden" name="currentChapterId" value="<?php echo htmlspecialchars($chapter['id']); ?>">
+
+                <?php foreach ($choices as $choice): ?>
+                    <button type="submit" name="choice" value="<?php echo htmlspecialchars($choice['choice_id']); ?>">
+                        <?php echo htmlspecialchars($choice['description']); ?>
+                    </button>
+                <?php endforeach; ?>
+            </form>
+        <?php else: ?>
+            <p>Aucun choix disponible pour ce chapitre.</p>
+        <?php endif; ?>
+
     <?php else: ?>
         <p>Chapitre introuvable.</p>
     <?php endif; ?>

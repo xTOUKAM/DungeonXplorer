@@ -1,57 +1,60 @@
 <?php
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    require 'autoload.php';
+require 'autoload.php';
 
-    class Router
+class Router
+{
+    private $routes = [];
+    private $prefix;
+
+    public function __construct($prefix = '')
     {
-        private $routes = [];
-        private $prefix;
-
-        public function __construct($prefix = '')
-        {
-            $this->prefix = trim($prefix, '/');
-        }
-
-        public function addRoute($uri, $controllerMethod)
-        {
-            $this->routes[trim($uri, '/')] = $controllerMethod;
-        }
-
-        public function route($url) {
-            // Suppression du préfixe du début de l'URL
-            if ($this->prefix && strpos($url, $this->prefix) === 0) {
-                $url = substr($url, strlen($this->prefix) + 1);
-            }
-
-            $url = trim($url, '/');
-
-            if (array_key_exists($url, $this->routes)) {
-                // Extraction du nom du contrôleur et de la méthode
-                list($controllerName, $methodName) = explode('@', $this->routes[$url]);
-
-                // Instanciation du contrôleur et appel de la méthode
-                $controller = new $controllerName();
-                $controller->$methodName();
-            } else {
-                // Gestion des erreurs (page 404, etc.)
-                echo '<h2>L\'URL demandée n\'existe pas !</h2>';
-            }
-        }
+        $this->prefix = trim($prefix, '/');
     }
 
-    // Instanciation du routeur
-    $router = new Router('DungeonXplorer');
+    public function addRoute($uri, $controllerMethod)
+    {
+        $this->routes[trim($uri, '/')] = $controllerMethod;
+    }
 
-    // Ajout des routes
-    $router->addRoute('', 'HomeController@index');
+    public function route($url)
+    {
+        // Récupérer les paramètres GET
+        if (isset($_GET['controller']) && isset($_GET['action'])) {
+            $controllerName = $_GET['controller'];
+            $action = $_GET['action'];
+            $chapterId = $_GET['chapterId'] ?? null;  // Peut être null si non défini
+            
+            // Inclure et créer le contrôleur
+            require_once "controllers/{$controllerName}.php";
+            $controller = new $controllerName();
+            
+            // Vérifier si la méthode existe, et l'appeler
+            if (method_exists($controller, $action)) {
+                // Appeler l'action avec le chapitre
+                $controller->$action($chapterId);
+            } else {
+                echo "L'action demandée n'existe pas.";
+            }
+        } else {
+            echo "Contrôleur ou action non définis.";
+        }
+    }   
+}
 
-    $router->addRoute('chapter/show', 'ChapterController@show');
-    $router->addRoute('chapter/choose', 'ChapterController@choose');
+// Instanciation du routeur
+$router = new Router('DungeonXplorer');
 
-    // Appel de la méthode route
-    $router->route(trim($_SERVER['REQUEST_URI'], '/'));
+// Ajout des routes
+$router->addRoute('', 'HomeController@index');
+$router->addRoute('chapter/show', 'ChapterController@show');
+$router->addRoute('chapter/choose', 'ChapterController@choose');
+
+// Appel de la méthode route
+$router->route(trim($_SERVER['REQUEST_URI'], '/'));
+
 ?>
