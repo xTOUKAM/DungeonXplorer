@@ -7,8 +7,10 @@ class ChapterController {
     }
 
     public function show($chapterId = 1) {
+        var_dump($chapterId); // Vérifiez si le chapitre est correctement passé
+    
         $chapter = $this->chapterModel->getChapterById($chapterId);
-        
+    
         if (!$chapter) {
             echo "Chapitre non trouvé pour l'ID : " . htmlspecialchars($chapterId);
             return;
@@ -16,7 +18,7 @@ class ChapterController {
     
         extract(['chapter' => $chapter]);
         include __DIR__ . '/../views/chapter.php';
-    }
+    }      
             
     public function choose($currentChapterId, $choiceId) {
         // Valider les IDs pour éviter des erreurs
@@ -27,12 +29,17 @@ class ChapterController {
         $nextChapterId = $this->chapterModel->getNextChapterId($currentChapterId, $choiceId);
     
         if ($nextChapterId) {
+            // Empêcher la mise en cache de la page
+            header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+            header("Pragma: no-cache");
+    
             // Rediriger vers le prochain chapitre
             header('Location: /DungeonXplorer/index.php?controller=ChapterController&action=show&chapterId=' . $nextChapterId);
-            exit();  // Toujours appeler exit après une redirection pour éviter tout comportement inattendu
+            exit();  // Toujours appeler exit après une redirection pour éviter l'exécution de code après la redirection
         } else {
             echo "Choix invalide ou chapitre suivant introuvable.";
         }
-    }      
+    }
+            
 }
 ?>

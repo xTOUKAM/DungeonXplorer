@@ -19,8 +19,11 @@
             $stmt = $this->bdd->prepare("SELECT next_chapter_id FROM Choices WHERE chapter_id = ? AND choice_id = ?");
             $stmt->execute([$currentChapterId, $choiceId]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            var_dump($result); // Vérifiez si le résultat est correct
+        
             return $result ? $result['next_chapter_id'] : null; // Retourne null si pas de chapitre suivant
-        }
+        }                
 
         public function getChoicesForChapter($chapterId) {
             $stmt = $this->bdd->prepare("SELECT choice_id, description FROM Choices WHERE chapter_id = ?");
