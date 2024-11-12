@@ -1,26 +1,31 @@
 <?php
     class Chapter {
-        private $db;
+        private $bdd;
 
         public function __construct() {
-            $this->db = Database::getInstance();
+            $this->bdd = Database::getInstance();
         }
 
         // Récupère le contenu d'un chapitre par son ID
         public function getChapterById($id) {
-            $stmt = $this->db->prepare("SELECT * FROM Chapter WHERE id = ?");
+            $id = (int)$id; // Conversion en entier pour sécuriser la requête
+            $stmt = $this->bdd->prepare("SELECT * FROM Chapter WHERE id = ?");
             $stmt->execute([$id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
-        // Logique de choix du prochain chapitre (simplifiée ici)
-        public function getNextChapter($currentChapterId, $choice) {
-            if ($choice == 'choix1') {
-                return $currentChapterId + 1; // Aller au chapitre suivant
-            } elseif ($choice == 'choix2') {
-                return $currentChapterId + 2; // Aller à un chapitre alternatif
-            }
-            return $currentChapterId;
+        // Récupère l'ID du prochain chapitre en fonction du chapitre actuel et du choix
+        public function getNextChapterId($currentChapterId, $choiceId) {
+            $stmt = $this->bdd->prepare("SELECT next_chapter_id FROM Choices WHERE chapter_id = ? AND choice_id = ?");
+            $stmt->execute([$currentChapterId, $choiceId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result['next_chapter_id'] : null; // Retourne null si pas de chapitre suivant
+        }
+
+        public function getChoicesForChapter($chapterId) {
+            $stmt = $this->bdd->prepare("SELECT choice_id, description FROM Choices WHERE chapter_id = ?");
+            $stmt->execute([$chapterId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 ?>
