@@ -1,8 +1,8 @@
 // Definition Classe personnage tous les paramètres du construteur doivent 
 class Personnage {
-    Personnage(Classe, PV, PV_ACTU, ATT_PHY, ATT_MAG, Force, Initiative, Mana, Bonus_Armure) {
+    Personnage(Classe, PV_MAX, PV_ACTU, ATT_PHY, ATT_MAG, Force, Initiative, Mana,MANA_ACTU, Bonus_Armure) {
         this.Classe = Classe;
-        this.PV = PV;
+        this.PV_MAX = PV_MAX;
         this.PV_ACTU = PV_ACTU;
         this.ATT_PHY = ATT_PHY;
         this.ATT_MAG = ATT_MAG;
@@ -10,6 +10,7 @@ class Personnage {
         this.Initiative = Initiative;
         this.Initiative_Combat = this.Calcul_initiative;
         this.Mana = Mana;
+        this.MANA_ACTU = MANA_ACTU;
         this.DEF = this.Calcul_DEF;
         this.Bonus_Armure = Bonus_Armure; 
     }
@@ -43,7 +44,7 @@ class Personnage {
     // Calcul les degats pris par le personnage
     Degats(attaque){
         if(attaque-this.def>0){
-            this.PV -= attaque - this.DEF;
+            this.PV_MAX -= attaque - this.DEF;
         }
        
     }
@@ -53,12 +54,12 @@ class Personnage {
         return this.Lancer_D6+this.Initiative; 
     }
 
-    // 
+    // Gagne des PV ou du Mana selon le type et la valeur de la Potion
     Boire_potion(Potion){
         if(Potion.type=="PV"){
             this.PV_ACTU += Potion.valeur;
-            if(this.PV_ACTU>this.PV){
-                this.PV_ACTU = this.PV
+            if(this.PV_ACTU>this.PV_MAX){
+                this.PV_ACTU = this.PV_MAX
             }
         }
         if(Potion.type=="MANA"){
@@ -68,6 +69,26 @@ class Personnage {
             }
         }
     }
+
+    // Choisir une action
+    Choisir_action(action){
+        if(action == "Boire_Potion"){
+            //recuperer la potion avec requete SQl
+            // Potion = Potion(type,valeur);
+            this.Boire_potion(Potion);
+        }
+        if(action == "Attaque_MAG"){
+            // recuperer la valeur et le cout du sort
+            this.Attaque_Magique;
+        }
+        else{
+            this.Attaque_physique;
+        }
+    }
+
+
+
+
 
 }
 
