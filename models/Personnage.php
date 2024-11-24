@@ -8,14 +8,14 @@ class Personnage {
 
     // Récupère un personnage par son ID
     public function getPersonnage($id) {
-        $stmt = $this->bdd->prepare("SELECT * FROM personnages WHERE id = :id");
+        $stmt = $this->bdd->prepare("SELECT * FROM hero WHERE hero_id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Récupère un monstre par son ID
     public function getMonstre($id) {
-        $stmt = $this->bdd->prepare("SELECT * FROM monstres WHERE id = :id");
+        $stmt = $this->bdd->prepare("SELECT * FROM monster WHERE monster_id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
