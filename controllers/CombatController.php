@@ -6,11 +6,13 @@ require_once '../models/Personnage.php'; // Inclure le modèle Personnage
 $personnageModel = new Personnage();
 
 // Récupération d'un héros et d'un monstre
-$personnageId = 1; // Exemple d'ID
-$monstreId = 2;    // Exemple d'ID
+$personnageId = 1; // A recuperer dynamiquement grâce a l'utilisateur
+$monstreId = 2;    // A recuperer dynamiquement grâce au monstre lié au chapitre
 
 $personnage = $personnageModel->getPersonnage($personnageId);
 $monstre = $personnageModel->getMonstre($monstreId);
+
+$personnageModel->getCombatData($personnage,$monstre);
 
 // Inclusion de la vue pour afficher les données
 require '../views/combat.php';

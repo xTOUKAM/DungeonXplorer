@@ -1,3 +1,29 @@
+const personnageId = 1; // TODO: Récupérer dynamiquement l'ID du personnage
+const monstreId = 2;    // TODO: Récupérer dynamiquement l'ID du monstre
+
+// Construire l'URL avec les IDs
+const url = `Personnage.php?personnageId=${personnageId}&monstreId=${monstreId}`;
+
+//Recupere les données et vérifie qu'elles sont retenus
+fetch(url)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des données');
+    }
+    return response.json(); // Convertit la réponse en JSON
+  })
+  .then(data => {
+    // Les données sont maintenant disponibles ici
+    console.log('Données récupérées :', data);
+  })
+  .catch(error => {
+    console.error('Erreur lors du fetch :', error);
+  });
+
+var $perso = new Personnage("Guerrier",data.personnage.pv,data.personnage.pv,data.personnage.strength,0,data.personnage.strentgh,data.personnage.initiative,data.personnage.mana,10,data.personnage.armor);
+const persoDiv = document.getElementById('perso');
+persoDiv.innerHTML = $perso.afficher();
+
 // Definition Classe personnage tous les paramètres du construteur doivent 
 class Personnage {
     Personnage(Classe, PV_MAX, PV_ACTU, ATT_PHY, ATT_MAG, Force, Initiative, Mana,MANA_ACTU, Bonus_Armure) {
@@ -13,6 +39,19 @@ class Personnage {
         this.MANA_ACTU = MANA_ACTU;
         this.DEF = this.Calcul_DEF;
         this.Bonus_Armure = Bonus_Armure; 
+    }
+
+    afficher() {
+        return `
+            <h2>Nom : ${this.Classe}</h2>
+            <p><strong>PV : </strong>${this.PV_ACTU} / ${this.PV_MAX}</p>
+            <p><strong>Mana : </strong>${this.MANA_ACTU} / ${this.Mana}</p>
+            <p><strong>Force : </strong>${this.Force}</p>
+            <p><strong>Initiative : </strong>${this.Initiative}</p>
+            <p><strong>Armure : </strong>${this.Bonus_Armure}</p>
+            <p><strong>Attaque Physique : </strong>${this.ATT_PHY}</p>
+            <p><strong>Attaque Magique : </strong>${this.ATT_MAG}</p>
+        `;
     }
 
     // Lance un D6 est renvoie la valeur
