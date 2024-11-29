@@ -9,8 +9,8 @@
     <h1>Affichage des données</h1>
 
         <!-- Affichage des données du personnage -->
-        <div class="perso">
+        <div id="perso">
         </div>
-        <script src="combat.js" defer></script>
+        <script defer src="../scripts/combat.js" ></script>
 </body>
 </html>

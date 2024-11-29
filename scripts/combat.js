@@ -1,32 +1,64 @@
-const personnageId = 1; // TODO: Récupérer dynamiquement l'ID du personnage
-const monstreId = 2;    // TODO: Récupérer dynamiquement l'ID du monstre
-
-// Construire l'URL avec les IDs
-const url = `Personnage.php?personnageId=${personnageId}&monstreId=${monstreId}`;
 
 //Recupere les données et vérifie qu'elles sont retenus
-fetch(url)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Erreur lors de la récupération des données');
+// Fonction pour récupérer les données JSON depuis une URL avec async/await
+async function obtenirDonnees(url) {
+    try {
+        // Envoi de la requête HTTP
+        const response = await fetch(url);
+        
+        // Vérification si la réponse est valide (code HTTP 200)
+        if (!response.ok) {
+            throw new Error('Erreur réseau');
+        }
+        
+        // Attendre et récupérer la réponse au format JSON
+        const data = await response.json();
+        
+        // Retourner les données récupérées
+        return data;
+    } catch (error) {
+        // Gestion des erreurs
+        console.error('Erreur lors de la récupération des données:', error);
+        throw error;
     }
-    return response.json(); // Convertit la réponse en JSON
-  })
-  .then(data => {
-    // Les données sont maintenant disponibles ici
-    console.log('Données récupérées :', data);
-  })
-  .catch(error => {
-    console.error('Erreur lors du fetch :', error);
-  });
+}
 
-var $perso = new Personnage("Guerrier",data.personnage.pv,data.personnage.pv,data.personnage.strength,0,data.personnage.strentgh,data.personnage.initiative,data.personnage.mana,10,data.personnage.armor);
-const persoDiv = document.getElementById('perso');
-persoDiv.innerHTML = $perso.afficher();
+// Utilisation de la fonction obtenirDonnees pour récupérer les données
+async function utiliserDonnees() {
+    try {
+        const data = await obtenirDonnees('https://dev-letelli236.users.info.unicaen.fr/models/JsonCombat.php');
+        console.log(data); // Afficher les données dans la console
+
+        // Création du personnage avec les données récupérées
+        var perso = new Personnage(
+            "Guerrier", 
+            data.personnage.pv, 
+            data.personnage.pv, 
+            data.personnage.strength, 
+            0, 
+            data.personnage.strength, 
+            data.personnage.initiative, 
+            data.personnage.mana, 
+            10, 
+            data.personnage.armor
+        );
+
+        // Affichage du personnage sur la page web
+        const persoDiv = document.getElementById('perso');
+        persoDiv.innerHTML = perso.afficher(); // Appel de la méthode afficher() de la classe Personnage
+    } catch (error) {
+        console.error('Erreur lors de l\'utilisation des données:', error);
+    }
+}
+
+// Appeler la fonction pour récupérer et utiliser les données
+utiliserDonnees();
+
+
 
 // Definition Classe personnage tous les paramètres du construteur doivent 
 class Personnage {
-    Personnage(Classe, PV_MAX, PV_ACTU, ATT_PHY, ATT_MAG, Force, Initiative, Mana,MANA_ACTU, Bonus_Armure) {
+    constructor(Classe, PV_MAX, PV_ACTU, ATT_PHY, ATT_MAG, Force, Initiative, Mana,MANA_ACTU, Bonus_Armure) {
         this.Classe = Classe;
         this.PV_MAX = PV_MAX;
         this.PV_ACTU = PV_ACTU;
