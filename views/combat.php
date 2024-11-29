@@ -11,6 +11,9 @@
         <!-- Affichage des données du personnage -->
         <div id="perso">
         </div>
+        <div id="monstre">
+            
+        </div>
         <script defer src="../scripts/combat.js" ></script>
 </body>
 </html>

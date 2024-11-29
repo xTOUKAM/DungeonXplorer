@@ -31,21 +31,33 @@ async function utiliserDonnees() {
 
         // Création du personnage avec les données récupérées
         var perso = new Personnage(
-            "Guerrier", 
+            data.personnage.name, 
+            data.personnage.base_pv, 
             data.personnage.pv, 
-            data.personnage.pv, 
-            data.personnage.strength, 
-            0, 
             data.personnage.strength, 
             data.personnage.initiative, 
+            data.personnage.base_mana, 
             data.personnage.mana, 
-            10, 
             data.personnage.armor
         );
 
         // Affichage du personnage sur la page web
         const persoDiv = document.getElementById('perso');
         persoDiv.innerHTML = perso.afficher(); // Appel de la méthode afficher() de la classe Personnage
+
+        // Création du personnage avec les données récupérées
+        var monstre = new Monstre(
+            data.monstre.name,  
+            data.monstre.pv, 
+            data.monstre.strength, 
+            data.monstre.initiative,  
+            data.monstre.mana, 
+            data.monstre.armor
+        );
+
+        // Affichage du personnage sur la page web
+        const monsterDiv = document.getElementById('monstre');
+        monsterDiv.innerHTML = monstre.afficher();
     } catch (error) {
         console.error('Erreur lors de l\'utilisation des données:', error);
     }
@@ -58,12 +70,10 @@ utiliserDonnees();
 
 // Definition Classe personnage tous les paramètres du construteur doivent 
 class Personnage {
-    constructor(Classe, PV_MAX, PV_ACTU, ATT_PHY, ATT_MAG, Force, Initiative, Mana,MANA_ACTU, Bonus_Armure) {
+    constructor(Classe, PV_MAX, PV_ACTU, Force, Initiative, Mana,MANA_ACTU, Bonus_Armure) {
         this.Classe = Classe;
         this.PV_MAX = PV_MAX;
         this.PV_ACTU = PV_ACTU;
-        this.ATT_PHY = ATT_PHY;
-        this.ATT_MAG = ATT_MAG;
         this.Force = Force;
         this.Initiative = Initiative;
         this.Initiative_Combat = this.Calcul_initiative;
@@ -81,8 +91,6 @@ class Personnage {
             <p><strong>Force : </strong>${this.Force}</p>
             <p><strong>Initiative : </strong>${this.Initiative}</p>
             <p><strong>Armure : </strong>${this.Bonus_Armure}</p>
-            <p><strong>Attaque Physique : </strong>${this.ATT_PHY}</p>
-            <p><strong>Attaque Magique : </strong>${this.ATT_MAG}</p>
         `;
     }
 
@@ -140,35 +148,58 @@ class Personnage {
             }
         }
     }
+}
 
-    // Choisir une action
-    Choisir_action(action){
-        if(action == "Boire_Potion"){
-            //recuperer la potion avec requete SQl
-            // Potion = Potion(type,valeur);
-            this.Boire_potion(Potion);
-        }
-        if(action == "Attaque_MAG"){
-            // recuperer la valeur et le cout du sort
-            this.Attaque_Magique;
-        }
-        else{
-            this.Attaque_physique;
-        }
+class Monstre {
+    constructor(Nom, PV_ACTU, Force, Initiative, Mana) {
+        this.Nom = Nom;
+        this.PV_ACTU = PV_ACTU;
+        this.Force = Force;
+        this.Initiative = Initiative;
+        this.Initiative_Combat = this.Calcul_initiative;
+        this.Mana = Mana;
+        this.DEF = this.Calcul_DEF;
     }
 
+    afficher() {
+        return `
+            <h2>Nom : ${this.Nom}</h2>
+            <p><strong>PV : </strong>${this.PV_ACTU}</p>
+            <p><strong>Mana : </strong>${this.Mana}</p>
+            <p><strong>Force : </strong>${this.Force}</p>
+            <p><strong>Initiative : </strong>${this.Initiative}</p>
+        `;
+    }
 
+    // Lance un D6 est renvoie la valeur
+    Lancer_D6(){
+        return Math.random() * (6-1+1) + 1;
+    }
 
+    // Calcul la Défense du personnage
+    Calcul_DEF(){
+        return this.Lancer_D6+Math.floor(this.Force/2);
+    }
 
+    // Calcul les dégats de l'attaque physique
+    Attaque_physique(){
+        return this.Lancer_D6+this.Force;
+    }
+
+    // Calcul les degats pris par le personnage
+    Degats(attaque){
+        if(attaque-this.def>0){
+            this.PV_MAX -= attaque - this.DEF;
+        }
+       
+    }
+
+    // Calcul l'initiative du personnage
+    Calcul_initiative(){
+        return this.Lancer_D6+this.Initiative; 
+    }
 
 }
 
-// Définit la classe Potion
-class Potion{
-    Potion(type,valeur){
-        this.type = type;
-        this.valeur = valeur;
-    }
-}
 
 

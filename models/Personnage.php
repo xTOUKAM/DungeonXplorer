@@ -8,7 +8,9 @@ class Personnage {
 
     // Récupère un personnage par son ID
     public function getPersonnage($id) {
-        $stmt = $this->bdd->prepare("SELECT * FROM hero WHERE hero_id = :id");
+        $stmt = $this->bdd->prepare("SELECT concat(class.name, ' ', hero.name) as name, class.base_pv, class.base_mana, hero.pv, hero.mana, hero.strength, hero.initiative, hero.armor  FROM hero 
+        Join class on hero.class_id = class.class_id 
+        WHERE hero_id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
