@@ -1,5 +1,6 @@
 body{
     background-color: #1A1A1A;
+    color: white;
 }
 
 .navbar{
@@ -17,4 +18,9 @@ body{
 
 .logo{
     width: 100%;
+}
+
+textarea {
+    overflow: auto;
+    resize: none;
 }

@@ -59,6 +59,8 @@
     $router->addRoute('chapter/show', 'ChapterController@show');
     $router->addRoute('chapter/choose', 'ChapterController@choose');
 
+    $router->addRoute('account/add-character', 'CharacterCreationController@creation');
+
     // Appel de la méthode route
     $router->route(trim($_SERVER['REQUEST_URI'], '/'));
 
