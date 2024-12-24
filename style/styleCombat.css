@@ -1,0 +1,47 @@
+/* Style général */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Conteneur principal pour le contenu */
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+
+/* Div des personnages */
+#perso, #monstre {
+    margin-bottom: 20px;
+}
+
+.actions-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none; /* Masque la barre par défaut */
+    justify-content: center;
+    padding: 10px;
+    background-color: #333;
+}
+
+.actions-bar button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.actions-bar button:hover {
+    background-color: #0056b3;
+}
+

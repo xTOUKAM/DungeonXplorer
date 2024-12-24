@@ -19,7 +19,6 @@ if (!$personnage || !$monstre) {
     echo json_encode(['error' => 'Personnage ou monstre introuvable']);
     exit;  // Arrêter l'exécution du script ici
 }
-//require '../views/combat.php';
 
 // Envoie les données en JSON
 header('Content-Type: application/json');
