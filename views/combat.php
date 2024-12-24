@@ -21,7 +21,7 @@
         <button id="bouton-popo">Potion</button>
     </div>
 
-    <script src="classes.js"></script>
+    <script src="../scripts/classes.js"></script>
     <script defer src="../scripts/combat.js"></script>
 </body>
 </html>

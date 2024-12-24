@@ -18,9 +18,9 @@ class Personnage {
     // Met à jour les statistiques du personnage
     public function updatePersonnage($id, $mana_actu, $pv_actu) {
         $stmt = $this->bdd->prepare("
-            UPDATE personnages 
+            UPDATE hero 
             SET pv = :pv, mana = :mana
-            WHERE id = :id
+            WHERE hero_id = :id
         ");
         return $stmt->execute(['pv' => $pv_actu, 'mana' => $mana_actu, 'id' => $id]);
     }

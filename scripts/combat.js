@@ -42,6 +42,7 @@ async function utiliserDonnees() {
         const persoDiv = document.getElementById('perso');
         persoDiv.innerHTML = perso.afficher();
 
+
         // Création du monstre
         monstre = new Monstre(
             data.monstre.name,
@@ -64,6 +65,31 @@ async function utiliserDonnees() {
 
 // Appel de la fonction pour récupérer et utiliser les données
 utiliserDonnees();
+
+function envoyerMajPerso(id, pv, mana) {
+    fetch('../models/updatePersonnage.php', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded' 
+        },
+        body: new URLSearchParams({
+            id: id,
+            pv: pv,
+            mana: mana
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'success') {
+            console.log("Mise à jour réussie !", data.message);
+        } else {
+            console.error("Erreur de mise à jour :", data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Erreur réseau/fetch :", error);
+    });
+}
 
 // Afficher ou masquer la barre d'actions (boutons)
 function afficherBarreActions(visible) {
@@ -101,6 +127,7 @@ async function Combat() {
             if (monstre.PV_ACTU <= 0) {
                 console.log("Le monstre est vaincu !");
                 // document.location.href = "victoire.html";
+                envoyerMajPerso(1, perso.PV_ACTU, perso.MANA_ACTU);
                 combatTermine = true;
                 break;
             }

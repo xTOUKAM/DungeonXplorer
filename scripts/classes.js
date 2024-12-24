@@ -1,18 +1,23 @@
 // classes.js
 
-// Definition Classe Personnage
+// ---------------------
+// Classe Personnage
+// ---------------------
 class Personnage {
     constructor(Nom, PV_MAX, PV_ACTU, Force, Initiative, Mana, MANA_ACTU, Bonus_Armure) {
+        // Conversion en nombre pour éviter qu'une chaîne s'insère
         this.Nom = Nom;
-        this.PV_MAX = PV_MAX;
-        this.PV_ACTU = PV_ACTU;
-        this.Force = Force;
-        this.Initiative = Initiative;
+        this.PV_MAX = parseInt(PV_MAX, 10);
+        this.PV_ACTU = parseInt(PV_ACTU, 10);
+        this.Force = parseInt(Force, 10);
+        this.Initiative = parseInt(Initiative, 10);
+        this.Mana = parseInt(Mana, 10);
+        this.MANA_ACTU = parseInt(MANA_ACTU, 10);
+        this.Bonus_Armure = parseInt(Bonus_Armure, 10);
+
+        // Calcul initial
         this.Initiative_Combat = this.Calcul_initiative();
-        this.Mana = Mana;
-        this.MANA_ACTU = MANA_ACTU;
         this.DEF = this.Calcul_DEF();
-        this.Bonus_Armure = Bonus_Armure; 
     }
 
     afficher() {
@@ -26,79 +31,93 @@ class Personnage {
         `;
     }
 
-    // Lance un D6 est renvoie la valeur
-    Lancer_D6(){
+    // Lance un D6 et renvoie la valeur [1..6]
+    Lancer_D6() {
         return Math.floor(Math.random() * 6) + 1;
     }
 
     // Calcul la Défense du personnage
-    Calcul_DEF(){
-        if(this.Nom.includes("Voleur")){
-            return this.Lancer_D6()+Math.floor(this.Initiative/2) + this.Bonus_Armure;
+    Calcul_DEF() {
+        const d6 = this.Lancer_D6();
+        let def = 0;
+        if (this.Nom.includes("Voleur")) {
+            def = d6 + Math.floor(this.Initiative / 2) + this.Bonus_Armure;
+        } else {
+            def = d6 + Math.floor(this.Force / 2) + this.Bonus_Armure;
         }
-        else{
-            return this.Lancer_D6()+Math.floor(this.Force/2) + this.Bonus_Armure;
-        }
+        return def;
     }
 
+    // Met à jour l'affichage du personnage dans la div #perso
     mettreAJourAffichage() {
-        const element = document.getElementById(this.Nom.toLowerCase());
+        const element = document.getElementById('perso');
         if (element) {
-            element.innerHTML = this.afficher(); // Réaffiche les données mises à jour
+            element.innerHTML = this.afficher();
         }
     }
-    
-    // Calcul les dégats de l'attaque physique
-    Attaque_physique(){
-        return this.Lancer_D6()+this.Force+this.Bonus_Armure;
+
+    // Calcul des dégâts de l'attaque physique
+    Attaque_physique() {
+        const d6 = this.Lancer_D6();
+        return d6 + this.Force + this.Bonus_Armure;
     }
 
-    // Calcul les dégats magiques
-    Attaque_Magique(){
-        this.Mana -= 0; //Manque valeur de Mana du sort
-        return this.Lancer_D6()+this.Lancer_D6(); //Manque valeur sort à voir au niveau BDD
+    // Calcul des dégâts magiques
+    Attaque_Magique() {
+        const d6a = this.Lancer_D6();
+        const d6b = this.Lancer_D6();
+        // Exemple : this.Mana -= coûtDuSort;
+        return d6a + d6b;
     }
 
-    // Calcul les degats pris par le personnage
-    Degats(attaque){
-        if(attaque - this.DEF > 0){
-            this.PV_ACTU -= attaque - this.DEF;
+    // Calcul des dégâts subis
+    Degats(attaque) {
+        const degatsReels = attaque - this.DEF;
+        if (degatsReels > 0) {
+            this.PV_ACTU -= degatsReels;
         }
         this.mettreAJourAffichage();
     }
 
     // Calcul l'initiative du personnage
-    Calcul_initiative(){
-        return this.Lancer_D6()+this.Initiative; 
+    Calcul_initiative() {
+        const d6 = this.Lancer_D6();
+        return d6 + this.Initiative;
     }
 
-    // Gagne des PV ou du Mana selon le type et la valeur de la Potion
-    Boire_potion(Potion){
-        if(Potion.type=="PV"){
-            this.PV_ACTU += Potion.valeur;
-            if(this.PV_ACTU>this.PV_MAX){
+    // Gagner des PV ou du Mana (via potion)
+    Boire_potion(Potion) {
+        const valeur = parseInt(Potion.valeur, 10);
+        if (Potion.type === "PV") {
+            this.PV_ACTU += valeur;
+            if (this.PV_ACTU > this.PV_MAX) {
                 this.PV_ACTU = this.PV_MAX;
             }
         }
-        if(Potion.type=="MANA"){
-            this.MANA_ACTU += Potion.valeur;
-            if(this.MANA_ACTU>this.MANA){
-                this.MANA_ACTU = this.MANA;
+        if (Potion.type === "MANA") {
+            this.MANA_ACTU += valeur;
+            if (this.MANA_ACTU > this.Mana) {
+                this.MANA_ACTU = this.Mana;
             }
         }
+        this.mettreAJourAffichage();
     }
 }
 
 
-// Definition Classe Monstre
+// ---------------------
+// Classe Monstre
+// ---------------------
 class Monstre {
     constructor(Nom, PV_ACTU, Force, Initiative, Mana) {
         this.Nom = Nom;
-        this.PV_ACTU = PV_ACTU;
-        this.Force = Force;
-        this.Initiative = Initiative;
+        this.PV_ACTU = parseInt(PV_ACTU, 10);
+        this.Force = parseInt(Force, 10);
+        this.Initiative = parseInt(Initiative, 10);
+        this.Mana = parseInt(Mana, 10);
+
+        // Calcul initial
         this.Initiative_Combat = this.Calcul_initiative();
-        this.Mana = Mana;
         this.DEF = this.Calcul_DEF();
     }
 
@@ -112,38 +131,43 @@ class Monstre {
         `;
     }
 
-    // Lance un D6 est renvoie la valeur
-    Lancer_D6(){
+    // Lance un D6 et renvoie la valeur [1..6]
+    Lancer_D6() {
         return Math.floor(Math.random() * 6) + 1;
     }
 
     // Calcul la Défense du monstre
-    Calcul_DEF(){
-        return this.Lancer_D6()+Math.floor(this.Force/2);
+    Calcul_DEF() {
+        const d6 = this.Lancer_D6();
+        return d6 + Math.floor(this.Force / 2);
     }
 
-    // Calcul les dégats de l'attaque physique
-    Attaque_physique(){
-        return this.Lancer_D6()+this.Force;
+    // Calcul l'initiative du monstre
+    Calcul_initiative() {
+        const d6 = this.Lancer_D6();
+        return d6 + this.Initiative;
     }
 
-    // Calcul les degats pris par le monstre
-    Degats(attaque){
-        if(attaque - this.DEF > 0){
-            this.PV_ACTU -= attaque - this.DEF;
+    // Attaque physique
+    Attaque_physique() {
+        const d6 = this.Lancer_D6();
+        return d6 + this.Force;
+    }
+
+    // Dégâts subis
+    Degats(attaque) {
+        const degatsReels = attaque - this.DEF;
+        if (degatsReels > 0) {
+            this.PV_ACTU -= degatsReels;
         }
         this.mettreAJourAffichage();
     }
 
+    // Met à jour l'affichage du monstre dans la div #monstre
     mettreAJourAffichage() {
-        const element = document.getElementById(this.Nom.toLowerCase());
+        const element = document.getElementById('monstre');
         if (element) {
-            element.innerHTML = this.afficher(); // Réaffiche les données mises à jour
+            element.innerHTML = this.afficher();
         }
-    }
-
-    // Calcul l'initiative du monstre
-    Calcul_initiative(){
-        return this.Lancer_D6()+this.Initiative; 
     }
 }
