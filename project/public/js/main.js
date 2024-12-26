@@ -1,4 +1,5 @@
 // main.js
+import Combat from './battle.js';
 
 // Fonction pour afficher les alertes de succès ou d'erreur
 function showAlert(message, type) {
@@ -23,3 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
         showAlert(errorMessage.textContent, 'danger');
     }
 });
+
+// Exemple d'initialisation
+const hero = { name: 'Héros', strength: 20, pv: 100, armor: 5 };
+const monster = { name: 'Gobelin', strength: 15, pv: 50, armor: 3 };
+
+const combat = new Combat(hero, monster);
+combat.start();
+console.log(combat.log);
+
