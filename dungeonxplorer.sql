@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 06 déc. 2024 à 23:49
+-- Généré le : jeu. 26 déc. 2024 à 23:58
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -89,6 +89,17 @@ CREATE TABLE `encounter` (
   `monster_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `encounter`
+--
+
+INSERT INTO `encounter` (`encounter_id`, `chapter_id`, `monster_id`) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 3),
+(4, 4, 4),
+(5, 5, 5);
+
 -- --------------------------------------------------------
 
 --
@@ -123,7 +134,9 @@ INSERT INTO `hero` (`hero_id`, `name`, `class_id`, `image`, `biography`, `pv`, `
 (2, 'Alakhazam', 1, NULL, NULL, 30, 0, 10, 2, NULL, NULL, NULL, NULL, NULL, 0, 1),
 (3, 'SirResval', 2, NULL, NULL, 20, 10, 6, 4, NULL, NULL, NULL, NULL, NULL, 0, 1),
 (4, 'SirResval', 2, NULL, NULL, 20, 10, 6, 4, NULL, NULL, NULL, NULL, NULL, 0, 1),
-(5, 'Pipibox', 2, NULL, NULL, 20, 10, 6, 4, NULL, NULL, NULL, NULL, NULL, 0, 1);
+(5, 'Pipibox', 2, NULL, NULL, 20, 10, 6, 4, NULL, NULL, NULL, NULL, NULL, 0, 1),
+(6, 'David', 1, NULL, NULL, 30, 0, 10, 2, NULL, NULL, NULL, NULL, NULL, 0, 1),
+(7, 'Test', 2, NULL, NULL, 20, 10, 6, 4, NULL, NULL, NULL, NULL, NULL, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -230,6 +243,17 @@ CREATE TABLE `loot` (
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `loot`
+--
+
+INSERT INTO `loot` (`loot_id`, `name`, `item_id`, `quantity`) VALUES
+(1, 'Peau de Sanglier', 1, 1),
+(2, 'Croc de Loup', 2, 2),
+(3, 'Sacoche du Gobelin', 3, 1),
+(4, 'Potion de Sorcière', 4, 1),
+(5, 'Masse de l\'Ogre', 5, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -247,6 +271,17 @@ CREATE TABLE `monster` (
   `loot_id` int(11) DEFAULT NULL,
   `xp` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `monster`
+--
+
+INSERT INTO `monster` (`monster_id`, `name`, `pv`, `mana`, `initiative`, `strength`, `attack`, `loot_id`, `xp`) VALUES
+(1, 'Sanglier Sauvage', 20, 0, 5, 7, 'Charge puissante', 1, 50),
+(2, 'Loup Féroce', 25, 0, 8, 6, 'Morsure', 2, 60),
+(3, 'Gobelin Voleur', 15, 5, 6, 5, 'Coup furtif', 3, 40),
+(4, 'Sorcière des Bois', 30, 20, 4, 5, 'Sort de confusion', 4, 70),
+(5, 'Ogre Géant', 50, 0, 3, 10, 'Coup de massue', 5, 100);
 
 -- --------------------------------------------------------
 
@@ -269,7 +304,9 @@ INSERT INTO `quest` (`quest_id`, `hero_id`, `chapter_id`) VALUES
 (2, 2, 1),
 (3, 2, 1),
 (4, 2, 1),
-(5, 5, 1);
+(5, 5, 1),
+(6, 6, 1),
+(7, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -306,7 +343,8 @@ INSERT INTO `user` (`user_id`, `user_name`, `user_password`) VALUES
 (7, 'testuser', 'b211a801e18ba09b6db0a1d54af68d08'),
 (8, 'testuser1', '5d7b76503767c267ac110cb0fe8be0d1'),
 (9, 'testuser2', '58dd024d49e1d1b83a5d307f09f32734'),
-(10, 'SirResval', 'e050df4aaa9db3b68bde853b8808a7f6');
+(10, 'SirResval', 'e050df4aaa9db3b68bde853b8808a7f6'),
+(11, 'TOUKAMx', 'c6504e716661b0873b9f9f3bc1bea5ff');
 
 -- --------------------------------------------------------
 
@@ -326,7 +364,9 @@ CREATE TABLE `user_hero` (
 INSERT INTO `user_hero` (`user_id`, `hero_id`) VALUES
 (9, 2),
 (9, 4),
-(10, 5);
+(10, 5),
+(10, 6),
+(11, 7);
 
 --
 -- Index pour les tables déchargées
@@ -451,13 +491,13 @@ ALTER TABLE `class`
 -- AUTO_INCREMENT pour la table `encounter`
 --
 ALTER TABLE `encounter`
-  MODIFY `encounter_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `encounter_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `hero`
 --
 ALTER TABLE `hero`
-  MODIFY `hero_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `hero_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `inventory`
@@ -487,19 +527,19 @@ ALTER TABLE `links`
 -- AUTO_INCREMENT pour la table `loot`
 --
 ALTER TABLE `loot`
-  MODIFY `loot_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `loot_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `monster`
 --
 ALTER TABLE `monster`
-  MODIFY `monster_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `monster_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `quest`
 --
 ALTER TABLE `quest`
-  MODIFY `quest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `quest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `treasure`
@@ -511,7 +551,7 @@ ALTER TABLE `treasure`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Contraintes pour les tables déchargées
