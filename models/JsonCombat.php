@@ -8,7 +8,7 @@ $personnageModel = new Personnage();
 $monstreModel = new CombatMonster();
 
 // Récupération d'un héros et d'un monstre
-$personnageId = 1; // A recuperer dynamiquement grâce a l'utilisateur
+$personnageId = 2; // A recuperer dynamiquement grâce a l'utilisateur
 $monstreId = 2;    // A recuperer dynamiquement grâce au monstre lié au chapitre
 
 $personnage = $personnageModel->getPersonnage($personnageId);
