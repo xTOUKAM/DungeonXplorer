@@ -4,8 +4,9 @@
 // Classe Personnage
 // ---------------------
 class Personnage {
-    constructor(Nom, PV_MAX, PV_ACTU, Force, Initiative, Mana, MANA_ACTU, Bonus_Armure) {
+    constructor(id, Nom, PV_MAX, PV_ACTU, Force, Initiative, Mana, MANA_ACTU, Bonus_Armure) {
         // Conversion en nombre pour éviter qu'une chaîne s'insère
+        this.id = id; // Ajout de l'ID
         this.Nom = Nom;
         this.PV_MAX = parseInt(PV_MAX, 10);
         this.PV_ACTU = parseInt(PV_ACTU, 10);
@@ -62,21 +63,24 @@ class Personnage {
         return d6 + this.Force + this.Bonus_Armure;
     }
 
-    // Calcul des dégâts magiques
+    // Calcul des dégâts magiques 2d6
     Attaque_Magique() {
         const d6a = this.Lancer_D6();
         const d6b = this.Lancer_D6();
-        // Exemple : this.Mana -= coûtDuSort;
         return d6a + d6b;
     }
 
     // Calcul des dégâts subis
     Degats(attaque) {
         const degatsReels = attaque - this.DEF;
+        let damageApplied = 0;
         if (degatsReels > 0) {
             this.PV_ACTU -= degatsReels;
+            if (this.PV_ACTU < 0) this.PV_ACTU = 0; // Empêcher les PV négatifs
+            damageApplied = degatsReels;
         }
         this.mettreAJourAffichage();
+        return damageApplied; // Retourne les dégâts réellement appliqués
     }
 
     // Calcul l'initiative du personnage
@@ -157,10 +161,14 @@ class Monstre {
     // Dégâts subis
     Degats(attaque) {
         const degatsReels = attaque - this.DEF;
+        let damageApplied = 0;
         if (degatsReels > 0) {
             this.PV_ACTU -= degatsReels;
+            if (this.PV_ACTU < 0) this.PV_ACTU = 0; // Empêcher les PV négatifs
+            damageApplied = degatsReels;
         }
         this.mettreAJourAffichage();
+        return damageApplied; // Retourne les dégâts réellement appliqués
     }
 
     // Met à jour l'affichage du monstre dans la div #monstre

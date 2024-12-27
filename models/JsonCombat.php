@@ -13,8 +13,9 @@ $monstreId = 2;    // A recuperer dynamiquement grâce au monstre lié au chapit
 
 $personnage = $personnageModel->getPersonnage($personnageId);
 $monstre = $monstreModel->getMonstre($monstreId);
+$spells = $personnageModel->getSpells($personnageId);
 
-if (!$personnage || !$monstre) {
+if (!$personnage || !$monstre || !$spells) {
     // Si les données sont invalides, on renvoie une erreur
     echo json_encode(['error' => 'Personnage ou monstre introuvable']);
     exit;  // Arrêter l'exécution du script ici
@@ -24,7 +25,8 @@ if (!$personnage || !$monstre) {
 header('Content-Type: application/json');
 echo json_encode([
     'personnage' => $personnage,
-    'monstre' => $monstre
+    'monstre' => $monstre,
+    'spells' => $spells
 ]);
 
 

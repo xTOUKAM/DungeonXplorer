@@ -25,12 +25,12 @@ class Personnage {
         return $stmt->execute(['pv' => $pv_actu, 'mana' => $mana_actu, 'id' => $id]);
     }
 
-    public function getSpeels($id){
+    public function getSpells($id){
         $requete = $this->bdd->prepare("SELECT spell_name, damage, mana_cost from spells
-        join hero_spell using (spell_id)
+        join hero_spell on spells.spell_id = hero_spell.spell_id
         where hero_id = :id");
         $requete->execute(['id' => $id]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
 
 
     }

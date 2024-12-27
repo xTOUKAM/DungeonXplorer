@@ -21,6 +21,18 @@
         <button id="bouton-popo">Potion</button>
     </div>
 
+    <!-- menu pour la sélection des sorts -->
+    <div id="spell-menu" class="menu">
+        <div class="menu-content">
+            <span class="close-button">&times;</span>
+            <h3>Choisissez un sort</h3>
+            <ul id="spell-list">
+                <!-- Les sorts seront injectés ici dynamiquement -->
+            </ul>
+        </div>
+    </div>
+
+
     <script src="../scripts/classes.js"></script>
     <script defer src="../scripts/combat.js"></script>
 </body>
